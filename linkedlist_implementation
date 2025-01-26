@@ -1,0 +1,204 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int val;
+    Node* next;
+    Node(int val) {
+        this->val = val;
+        this->next = NULL;
+    }
+};
+
+class Linkedlist {
+    Node* head;
+    Node* tail;
+    int size;
+
+public:
+    Linkedlist() {
+        head = tail = NULL;
+        size = 0;
+    }
+
+    /* Insert at end */
+    void insertatend(int val) {
+        Node* temp = new Node(val);
+        if (size == 0) {
+            head = tail = temp;
+        } else {
+            tail->next = temp;
+            tail = temp;
+        }
+        size++;
+    }
+
+    /* Insert at begin */
+    void insertatbegin(int val) {
+        Node* temp = new Node(val);
+        if (size == 0) {
+            head = tail = temp;
+        } else {
+            temp->next = head;
+            head = temp;
+        }
+        size++;
+    }
+
+    /* Insert at particular index */
+    void insertat(int val, int idx) {
+        if (idx < 0 || idx > size) {
+            cout << "Invalid index" << endl;
+            return;
+        }
+        if (idx == 0) {
+            insertatbegin(val);
+            return;
+        }
+        if (idx == size) {
+            insertatend(val);
+            return;
+        }
+
+        Node* temp = new Node(val);
+        Node* curr = head;
+        for (int i = 1; i < idx; i++) {
+            curr = curr->next;
+        }
+        temp->next = curr->next;
+        curr->next = temp;
+        size++;
+    }
+
+    /* Display the linked list */
+    void display() {
+        Node* temp = head;
+        while (temp != NULL) {
+            cout << temp->val << " ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+
+    /* Function to get the element at a particular index */
+    int getAtIdx(int idx) {
+        if (idx < 0 || idx >= size) {
+            cout << "Invalid index" << endl;
+            return -1;
+        }
+
+        Node* curr = head;
+        for (int i = 0; i < idx; i++) {
+            curr = curr->next;
+        }
+        return curr->val;
+    }
+
+    /* Displaying the size of the linked list */
+    int getsize() {
+        return size;
+    }
+
+    /* Delete at tail */
+    void deleteatTail() {
+        if (size == 0) {
+            cout << "List is empty" << endl;
+            return;
+        }
+        if (size == 1) {
+            delete head;
+            head = tail = NULL;
+        } else {
+            Node* temp = head;
+            while (temp->next != tail) {
+                temp = temp->next;
+            }
+            delete tail;
+            tail = temp;
+            tail->next = NULL;
+        }
+        size--;
+    }
+
+    /* Delete at head */
+    void deleteatHead() {
+        if (size == 0) {
+            cout << "List is empty" << endl;
+            return;
+        }
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+        if (size == 1) {
+            tail = NULL;
+        }
+        size--;
+    }
+
+    /* Delete at a given index */
+    void deleteAtIdx(int idx) {
+        if (idx < 0 || idx >= size) {
+            cout << "Invalid index" << endl;
+            return;
+        }
+        if (idx == 0) {
+            deleteatHead();
+            return;
+        }
+        if (idx == size - 1) {
+            deleteatTail();
+            return;
+        }
+
+        Node* curr = head;
+        for (int i = 1; i < idx; i++) {
+            curr = curr->next;
+        }
+        Node* toDelete = curr->next;
+        curr->next = toDelete->next;
+        delete toDelete;
+        size--;
+    }
+};
+
+int main() {
+    Linkedlist ll;
+
+    cout << "Insert at the end: ";
+    ll.insertatend(10);
+    ll.insertatend(20);
+    ll.insertatend(30);
+    ll.display();
+
+    cout << "Insert at the beginning: ";
+    ll.insertatbegin(40);
+    ll.insertatbegin(50);
+    ll.insertatbegin(60);
+    ll.display();
+
+    cout << "Insert at particular index: ";
+    ll.insertat(70, 2);
+    ll.insertat(80, 4);
+    ll.insertat(90, 6);
+    ll.display();
+
+    cout << "Size of the linked list: " << ll.getsize() << endl;
+
+    cout << "Element at index 4: " << ll.getAtIdx(4) << endl;
+    cout << "Element at index 5: " << ll.getAtIdx(5) << endl;
+
+    cout << "Delete at head: ";
+    ll.deleteatHead();
+    ll.display();
+
+    cout << "Delete at tail: ";
+    ll.deleteatTail();
+    ll.display();
+
+    cout << "Delete at index 2: ";
+    ll.deleteAtIdx(2);
+    ll.display();
+
+    return 0;
+}
